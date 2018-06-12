@@ -1,13 +1,18 @@
 from django.shortcuts import render
+
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . import serializers
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import filters
 from rest_framework import status
+
+
 from . import models
 from . import permissions
-from rest_framework.authentication import TokenAuthentication
-from rest_framework import filters
+from . import serializers
 
 
 # Create your views here.
@@ -116,3 +121,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
+
+class LoginViewSet(viewsets.ViewSet):
+    """Checks email and password and returns auth toekn"""
+
+    serializer_class = AuthTokenSerializer
+    def create(self, request):
+        """Use the ObtainAuthToekn APIView to validate and create a token"""
+        return ObtainAuthToken().post(request)
