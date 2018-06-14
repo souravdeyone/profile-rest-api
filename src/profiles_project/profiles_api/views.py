@@ -123,9 +123,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'email',)
 
 class LoginViewSet(viewsets.ViewSet):
-    """Checks email and password and returns auth toekn"""
+    """Checks email and password and returns auth token"""
 
     serializer_class = AuthTokenSerializer
     def create(self, request):
         """Use the ObtainAuthToekn APIView to validate and create a token"""
         return ObtainAuthToken().post(request)
+
+
+class MyProfileApiView(APIView):
+    """ Return the current users profile."""
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.UserProfileSerializer
+
+    def get(self, request, format=None):
+        """ Return current logged in user."""
+
+        current_user = self.serializer_class(request.user)
+        return Response(current_user.data)
