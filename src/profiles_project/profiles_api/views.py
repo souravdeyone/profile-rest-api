@@ -113,6 +113,7 @@ class HelloViewSets(viewsets.ViewSet):
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating profiles"""
+    authentication_classes = (TokenAuthentication,)
 
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
@@ -123,8 +124,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
 
+
+
 class LoginViewSet(viewsets.ViewSet):
     """Checks email and password and returns auth token"""
+    authentication_classes = (TokenAuthentication,)
 
     serializer_class = AuthTokenSerializer
     def create(self, request):
